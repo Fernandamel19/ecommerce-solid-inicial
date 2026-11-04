@@ -4,7 +4,6 @@ export interface IProduct {
   price: number;
   calculateFreight(): number;
 }
-
 export interface ProductData {
   id: number;
   name: string;

@@ -1,3 +1,5 @@
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../container/types';
 import logger from '../lib/logger';
 import { ValidationError } from '../domain/errors';
 import { OrderItem, OrderLine } from '../domain/Order';
@@ -6,15 +8,14 @@ import { IProductRepository } from '../repositories/IProductRepository';
 import { IOrderRepository } from '../repositories/IOrderRepository';
 import { PaymentMethodRegistry } from '../payments/PaymentMethodRegistry';
 import { NotificationService } from './NotificationService';
-
+@injectable()
 export class OrderService {
-  constructor(
-    private products: IProductRepository,
-    private orders: IOrderRepository,
-    private payments: PaymentMethodRegistry,
-    private notification: NotificationService,
+    constructor(
+    @inject(TYPES.ProductRepository) private products: IProductRepository,
+    @inject(TYPES.OrderRepository) private orders: IOrderRepository,
+    @inject(TYPES.PaymentMethodRegistry) private payments: PaymentMethodRegistry,
+    @inject(TYPES.NotificationService) private notification: NotificationService,
   ) {}
-
   async placeOrder(customer: string, items: OrderItem[], paymentMethod: string, paymentDetails: any) {
     if (!items || items.length === 0) {
       logger.error('Tentativa de pedido sem itens');
