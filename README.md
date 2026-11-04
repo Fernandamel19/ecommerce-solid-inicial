@@ -6,12 +6,26 @@ Este é o e-commerce do Projeto 1 já refatorado (SRP, OCP e LSP). Ele é o pont
 
 ```bash
 npm install
+cp .env.example .env
 npm run prisma:migrate
 npm run prisma:seed
 npm run dev
 ```
+A API sobe em `http://localhost:3000`.
 
-A API sobe em `http://localhost:3000`. Teste com:
+### Os dois modos
+
+O modo é escolhido pela variável `APP_ENV`, no arquivo `.env`. Para trocar de modo, mude só essa linha e reinicie o servidor (Ctrl + C e `npm run dev`).
+
+| | `APP_ENV=dev` | `APP_ENV=test` |
+|---|---|---|
+| E-mail | `EtherealMailProvider`: envia pelo Ethereal e devolve o link | `ConsoleMailProvider`: só mostra o e-mail no terminal |
+| Pedidos | `PrismaOrderRepository`: salvos no banco SQLite | `InMemoryOrderRepository`: guardados num array, somem ao desligar |
+| Internet | precisa (para o Ethereal) | não precisa |
+
+Se o `.env` não existir, o sistema roda no modo `dev`.
+
+### Teste
 
 ```bash
 curl -X POST http://localhost:3000/orders \
@@ -24,7 +38,7 @@ curl -X POST http://localhost:3000/orders \
 }'
 ```
 
-Produto `1` é o livro físico (R$ 100 + R$ 10 de frete), produto `2` é o e-book (R$ 50, sem frete). Formas de pagamento: `credit_card`, `debit_card` e `pix`.
+Produto `1` é o livro físico (R$ 100 + R$ 10 de frete = R$ 110), produto `2` é o e-book (R$ 50, sem frete). Nos dois modos o total é o mesmo. No modo `test`, o `emailPreview` vem `null` e o e-mail aparece no terminal do servidor. Formas de pagamento: `credit_card`, `debit_card` e `pix`.
 
 ## Estrutura
 
